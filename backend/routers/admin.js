@@ -3,14 +3,6 @@ const router = express.Router();
 const { pool } = require("../config/db");
 const { adminPermissions } = require("../config/middlewares");
 
-// router.get("/", adminPermissions, async (req, res) => {
-//   res.send("admin page");
-// });
-
-// router.post("/updateProfile", async (req, res) => {
-//   res.send("Update Profile");
-// });
-
 router.get("/getUsers", adminPermissions, async (req, res) => {
   let { offset, limit } = req.query;
   try {
