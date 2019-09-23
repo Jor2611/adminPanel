@@ -16,9 +16,6 @@ router.get("/", devPermissions, async (req, res) => {
   }
 });
 
-// router.post("/changeAvatar", async (req, res) => {
-//   res.send("Create Report");
-// });
 
 router.post("/createReport", devPermissions, async (req, res) => {
   let { name, description, estimation, spent } = req.body;
