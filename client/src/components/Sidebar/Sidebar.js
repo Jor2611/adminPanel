@@ -28,23 +28,18 @@ const structure = [
   { id: 0, type: "title", label: "Dashboard", icon: <HomeIcon /> },
   {
     id: 1,
-    label: "Notifications",
-    link: "/app/notification",
-    icon: <NotificationsIcon />
+    label: "Manage Users",
+    link: "/app/users",
+    icon: <UsersIcon />
   },
   { id: 2, type: "divider" },
   { id: 3, label: "Reports", link: "/app/report", icon: <ReportIcon /> },
   { id: 4, type: "divider" },
   {
     id: 5,
-    label: "Users",
-    link: "/app/users",
-    icon: <UsersIcon />,
-    children: [
-      { label: "Administrators", link: "/app/users/admin" },
-      { label: "Project Managers", link: "/app/users/pm" },
-      { label: "Developers", link: "/app/users/dev" }
-    ]
+    label: "Notifications",
+    link: "/app/notification",
+    icon: <NotificationsIcon />
   }
 ];
 

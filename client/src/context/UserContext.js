@@ -6,8 +6,10 @@ var UserDispatchContext = React.createContext();
 function userReducer(state, action) {
   switch (action.type) {
     case "LOGIN_SUCCESS":
-      return { ...state, isAuthenticated: true };
+      return { ...state, isAuthenticated: true, role: action.role };
     case "SIGN_OUT_SUCCESS":
+      return { ...state, isAuthenticated: false };
+    case "LOGIN_FAILURE":
       return { ...state, isAuthenticated: false };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -18,6 +20,7 @@ function userReducer(state, action) {
 function UserProvider({ children }) {
   var [state, dispatch] = React.useReducer(userReducer, {
     isAuthenticated: !!localStorage.getItem("id_token"),
+    role: null
   });
 
   return (
@@ -49,23 +52,40 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, history, setIsLoading, setError) {
-  setError(false);
+async function loginUser(
+  dispatch,
+  username,
+  password,
+  history,
+  setIsLoading,
+  setError
+) {
+  const data = { username, password };
   setIsLoading(true);
-
-  if (!!login && !!password) {
-    setTimeout(() => {
-      localStorage.setItem("id_token", "1");
-      dispatch({ type: "LOGIN_SUCCESS" });
-      setError(null);
+  try {
+    let doc = await fetch("http://localhost:5000/auth", {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    doc = await doc.json();
+    if (!doc) {
+      setError(true);
       setIsLoading(false);
-
-      history.push("/app/dashboard");
-    }, 2000);
-  } else {
-    dispatch({ type: "LOGIN_FAILURE" });
+      return dispatch({ type: "LOGIN_FAILURE" });
+    }
+    localStorage.setItem("id_token", "Bearer " + doc.token);
+    setError(null);
+    setIsLoading(false);
+    return dispatch({
+      type: "LOGIN_SUCCESS",
+      role: doc.user.role
+    });
+  } catch (e) {
     setError(true);
     setIsLoading(false);
+    return dispatch({ type: "LOGIN_FAILURE" });
   }
 }
 

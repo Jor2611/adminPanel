@@ -55,12 +55,8 @@ function Login(props) {
           {activeTabId === 0 && (
             <React.Fragment>
               <Typography variant="h1" className={classes.greeting}>
-                Good Morning, User
+                Welcome, just login and go forward
               </Typography>
-              {/* <div className={classes.formDividerContainer}>
-                <div className={classes.formDivider} />
-                <div className={classes.formDivider} />
-              </div> */}
               <Fade in={error}>
                 <Typography color="secondary" className={classes.errorMessage}>
                   Something is wrong with your login or password :(
@@ -79,6 +75,7 @@ function Login(props) {
                 margin="normal"
                 placeholder="Email Adress"
                 type="email"
+                disabled={isLoading}
                 fullWidth
               />
               <TextField
@@ -92,6 +89,7 @@ function Login(props) {
                 value={passwordValue}
                 onChange={e => setPasswordValue(e.target.value)}
                 margin="normal"
+                disabled={isLoading}
                 placeholder="Password"
                 type="password"
                 fullWidth

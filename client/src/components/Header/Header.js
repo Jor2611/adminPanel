@@ -15,7 +15,6 @@ import {
   ArrowBack as ArrowBackIcon
 } from "@material-ui/icons";
 import classNames from "classnames";
-
 // styles
 import useStyles from "./styles";
 
@@ -155,6 +154,15 @@ export default function Header(props) {
               <Notification {...notification} typographyVariant="inherit" />
             </MenuItem>
           ))}
+          <div className={classes.profileMenuUser}>
+            <Typography
+              className={classes.profileMenuLink}
+              color="primary"
+              onClick={() => signOut(userDispatch, props.history)}
+            >
+              See More
+            </Typography>
+          </div>
         </Menu>
         <Menu
           id="profile-menu"
@@ -169,14 +177,6 @@ export default function Header(props) {
             <Typography variant="h4" weight="medium">
               John Smith
             </Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component="a"
-              color="primary"
-              href="https://flatlogic.com"
-            >
-              Flalogic.com
-            </Typography>
           </div>
           <MenuItem
             className={classNames(
@@ -185,22 +185,6 @@ export default function Header(props) {
             )}
           >
             <AccountIcon className={classes.profileMenuIcon} /> Profile
-          </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Tasks
-          </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Messages
           </MenuItem>
           <div className={classes.profileMenuUser}>
             <Typography

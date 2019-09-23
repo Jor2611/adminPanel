@@ -16,7 +16,7 @@ function layoutReducer(state, action) {
 function LayoutProvider({ children }) {
   var [state, dispatch] = React.useReducer(layoutReducer, {
     //hesa
-    isSidebarOpened: true
+    isSidebarOpened: false
   });
   return (
     <LayoutStateContext.Provider value={state}>

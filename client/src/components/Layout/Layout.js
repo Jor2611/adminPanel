@@ -12,42 +12,47 @@ import Sidebar from "../Sidebar";
 //im ejer@
 import Notification from "../../pages/notification";
 import Report from "../../pages/report";
-import Admin from "../../pages/users/admin";
-import Developer from "../../pages/users/dev";
-import ProjectManager from "../../pages/users/pm";
+import Admin from "../../pages/admin";
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
+import { useUserState } from "../../context/UserContext";
 
 function Layout(props) {
   var classes = useStyles();
 
   // global
   var layoutState = useLayoutState();
+  var { role } = useUserState();
 
   return (
     <div className={classes.root}>
       <>
         <Header history={props.history} />
-        <Sidebar />
+        {role === "admin" ? <Sidebar /> : null}
         <div
           className={classnames(classes.content, {
             [classes.contentShift]: layoutState.isSidebarOpened
           })}
         >
           <div className={classes.fakeToolbar} />
-          <Switch>
-            <Route path="/app/notification" component={Notification} />
-            <Route path="/app/report" component={Report} />
-            <Route
-              exact
-              path="/app/users"
-              render={() => <Redirect to="/app/users/admin" />}
-            />
-            <Route path="/app/users/admin" component={Admin} />
-            <Route path="/app/users/pm" component={ProjectManager} />
-            <Route path="/app/users/dev" component={Developer} />
-          </Switch>
+          {role === "admin" ? (
+            <Switch>
+              <Route
+                path="/app/users/*"
+                render={() => <Redirect to="/app/users" />}
+              />
+              <Route path="/app/users" component={Admin} />
+              <Route path="/app/report" component={Report} />
+              <Route path="/app/notification" component={Notification} />
+              <Route
+                path="/app/*"
+                render={() => <Redirect to="/app/users" />}
+              />
+            </Switch>
+          ) : (
+            <h1>Not Admin</h1>
+          )}
         </div>
       </>
     </div>
