@@ -43,7 +43,7 @@ Run both servers with:
 $ npm run both
 ```
 
-Hit in the browser http://localhost:5000/createTables,for creating and generating new members.
+Hit in the browser http://localhost:5000/createTables , for creating and generating new members.
 
 You can pick users from **backend/config/db/Users.sql**.
 (Admin) Login: worourke22, Password: 766648, etc.
