@@ -19,16 +19,24 @@ import logo from "./logo.svg";
 
 // context
 import { useUserDispatch, loginUser } from "../../context/UserContext";
+// import { useLayoutDispatch } from "../../context/LayoutContext";
 
 function Login(props) {
   var classes = useStyles();
 
   // global
   var userDispatch = useUserDispatch();
+  // const layoutDispatch = useLayoutDispatch();
 
   // local
-  var [isLoading, setIsLoading] = useState(false);
-  var [error, setError] = useState(null);
+  var [
+    isLoading
+    // setIsLoading
+  ] = useState(false);
+  var [
+    error
+    // setError
+  ] = useState(null);
   var [activeTabId, setActiveTabId] = useState(0);
   var [loginValue, setLoginValue] = useState("");
   var [passwordValue, setPasswordValue] = useState("");
@@ -105,11 +113,10 @@ function Login(props) {
                     onClick={() =>
                       loginUser(
                         userDispatch,
+                        // layoutDispatch,
                         loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError
+                        passwordValue
+                        // props.history
                       )
                     }
                     variant="contained"

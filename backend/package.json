@@ -4,31 +4,27 @@
   "description": "Back-end Side of Admin Pandel",
   "main": "server.js",
   "scripts": {
-    "test": "jest --watch --runInBand",
-    "start": "node server",
-    "dev": "env-cmd -f ./config/env/dev.env nodemon server.js"
-  },
-  "jest": {
-    "testEnvironment": "node"
+    "client": "npm start --prefix ../client",
+    "dev": "env-cmd -f ./config/env/dev.env nodemon server.js",
+    "conf_db": "node ./config/db/db_configure.js",
+    "both": "concurrently \"npm run dev\" \"npm run client\""
   },
   "keywords": [],
   "author": "Zhora Khachatryan",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "chalk": "^2.4.2",
+    "concurrently": "^4.1.2",
     "cors": "^2.8.5",
-    "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "multer": "^1.4.2",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sharp": "^0.23.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "env-cmd": "^10.0.1",
-    "jest": "^24.9.0",
     "nodemon": "^1.19.2"
   }
 }

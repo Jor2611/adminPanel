@@ -1,4 +1,4 @@
-CREATE TABLE tokens
+CREATE TABLE IF NOT EXISTS tokens
 (
 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 token text NOT NULL,

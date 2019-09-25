@@ -1,5 +1,11 @@
 import React from "react";
-import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import {
+  //  Route,
+  // Switch,
+  // Redirect,
+  withRouter
+  // Redirect
+} from "react-router-dom";
 import classnames from "classnames";
 
 // styles
@@ -10,20 +16,33 @@ import Header from "../Header";
 import Sidebar from "../Sidebar";
 
 //im ejer@
-import Notification from "../../pages/notification";
-import Report from "../../pages/report";
-import Admin from "../../pages/admin";
+import AdminLayout from "./RoleSwitcher/AdminLayout";
+import PMLayout from "./RoleSwitcher/PMLayout";
+import DevLayout from "./RoleSwitcher/DevLayout";
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 import { useUserState } from "../../context/UserContext";
 
 function Layout(props) {
-  var classes = useStyles();
+  const classes = useStyles();
 
   // global
-  var layoutState = useLayoutState();
-  var { role } = useUserState();
+  const { isSidebarOpened } = useLayoutState();
+  const { role } = useUserState();
+
+  const roleSwitcher = () => {
+    switch (role) {
+      case "admin":
+        return <AdminLayout />;
+      case "pm":
+        return <PMLayout />;
+      case "dev":
+        return <DevLayout />;
+      default:
+        return;
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -32,27 +51,11 @@ function Layout(props) {
         {role === "admin" ? <Sidebar /> : null}
         <div
           className={classnames(classes.content, {
-            [classes.contentShift]: layoutState.isSidebarOpened
+            [classes.contentShift]: isSidebarOpened
           })}
         >
           <div className={classes.fakeToolbar} />
-          {role === "admin" ? (
-            <Switch>
-              <Route
-                path="/app/users/*"
-                render={() => <Redirect to="/app/users" />}
-              />
-              <Route path="/app/users" component={Admin} />
-              <Route path="/app/report" component={Report} />
-              <Route path="/app/notification" component={Notification} />
-              <Route
-                path="/app/*"
-                render={() => <Redirect to="/app/users" />}
-              />
-            </Switch>
-          ) : (
-            <h1>Not Admin</h1>
-          )}
+          {roleSwitcher()}
         </div>
       </>
     </div>

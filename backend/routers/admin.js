@@ -3,14 +3,6 @@ const router = express.Router();
 const { pool } = require("../config/db");
 const { adminPermissions } = require("../config/middlewares");
 
-// router.get("/", adminPermissions, async (req, res) => {
-//   res.send("admin page");
-// });
-
-// router.post("/updateProfile", async (req, res) => {
-//   res.send("Update Profile");
-// });
-
 router.get("/getUsers", adminPermissions, async (req, res) => {
   let { offset, limit } = req.query;
   try {
@@ -21,8 +13,30 @@ router.get("/getUsers", adminPermissions, async (req, res) => {
     if (usersObj.rows.length === 0) throw new Error();
     let users = usersObj.rows.map(user => {
       delete user.created_at;
-      delete user.updated_at;
-      delete user.password;
+      user.password = "*******";
+      switch (user.role) {
+        case "admin":
+          user.role = 1;
+          break;
+        case "pm":
+          user.role = 2;
+          break;
+        case "dev":
+          user.role = 3;
+          break;
+        default:
+          return false;
+      }
+      switch (user.gender) {
+        case "Male":
+          user.gender = 1;
+          break;
+        case "Female":
+          user.gender = 2;
+          break;
+        default:
+          return false;
+      }
       return user;
     });
     return res.status(200).json({ users });
@@ -67,23 +81,36 @@ router.post("/createUser", adminPermissions, async (req, res) => {
 });
 
 router.patch("/updateUser/:id", adminPermissions, async (req, res) => {
+  let { first_name, last_name, gender, role, password } = req.body;
+  let query =
+    "UPDATE users SET first_name=$1, last_name=$2, gender=$3, role=$4,updated_at=NOW(), password=crypt($5,gen_salt('bf')) WHERE id=$6";
+  let values = [first_name, last_name, gender, role, password, req.params.id];
+
+  if (req.body.password === "*******") {
+    query =
+      "UPDATE users SET first_name=$1, last_name=$2, gender=$3, role=$4,updated_at=NOW() WHERE id=$5";
+    values = [first_name, last_name, gender, role, req.params.id];
+    delete req.body.password;
+  }
+
+  delete req.body.id;
+  delete req.body.username;
   const updates = Object.keys(req.body);
-  let { first_name, last_name, gender, role } = req.body;
   const allowedUpdates = [
     "first_name",
     "last_name",
     "gender",
     "role",
-    "updated_at"
+    "updated_at",
+    "password"
   ];
+
   const isValidOperation = updates.every(item => allowedUpdates.includes(item));
-  if (!isValidOperation)
+  if (!isValidOperation) {
     return res.status(400).send({ error: "Invalid Updates!" });
+  }
   try {
-    let updatedUser = await pool.query(
-      "UPDATE users SET first_name=$1, last_name=$2, gender=$3, role=$4,updated_at=NOW() WHERE id=$5",
-      [first_name, last_name, gender, role, req.params.id]
-    );
+    let updatedUser = await pool.query(query, values);
     return updatedUser.rowCount === 1
       ? res.status(201).send({ success: true, msg: "User updated" })
       : res.status(400).json({ success: false, msg: "Cannot update Report" });

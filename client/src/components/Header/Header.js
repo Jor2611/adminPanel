@@ -10,7 +10,7 @@ import {
 import {
   Menu as MenuIcon,
   NotificationsNone as NotificationsIcon,
-  Person as AccountIcon,
+  ExitToApp as ExitIcon,
   Send as SendIcon,
   ArrowBack as ArrowBackIcon
 } from "@material-ui/icons";
@@ -28,7 +28,11 @@ import {
   useLayoutDispatch,
   toggleSidebar
 } from "../../context/LayoutContext";
-import { useUserDispatch, signOut } from "../../context/UserContext";
+import {
+  useUserDispatch,
+  useUserState,
+  signOut
+} from "../../context/UserContext";
 
 const notifications = [
   { id: 0, color: "warning", message: "Check out this awesome ticket" },
@@ -50,41 +54,50 @@ export default function Header(props) {
   var classes = useStyles();
 
   // global
-  var layoutState = useLayoutState();
-  var layoutDispatch = useLayoutDispatch();
-  var userDispatch = useUserDispatch();
+  const { isSidebarOpened } = useLayoutState();
+  const { role } = useUserState();
+  const layoutDispatch = useLayoutDispatch();
+  const userDispatch = useUserDispatch();
 
   // local
-  var [mailMenu, setMailMenu] = useState(null);
-  var [notificationsMenu, setNotificationsMenu] = useState(null);
-  var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
-  var [profileMenu, setProfileMenu] = useState(null);
+  const [mailMenu, setMailMenu] = useState(null);
+  const [notificationsMenu, setNotificationsMenu] = useState(null);
+  const [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
-        <IconButton
-          color="inherit"
-          onClick={() => toggleSidebar(layoutDispatch)}
-          className={classNames(
-            classes.headerMenuButton,
-            classes.headerMenuButtonCollapse
-          )}
-        >
-          {layoutState.isSidebarOpened ? (
-            <ArrowBackIcon
-              classes={{
-                root: classNames(classes.headerIcon, classes.headerIconCollapse)
-              }}
-            />
-          ) : (
-            <MenuIcon
-              classes={{
-                root: classNames(classes.headerIcon, classes.headerIconCollapse)
-              }}
-            />
-          )}
-        </IconButton>
+        {role === "admin" ? (
+          <IconButton
+            color="inherit"
+            onClick={() => toggleSidebar(layoutDispatch)}
+            className={classNames(
+              classes.headerMenuButton,
+              classes.headerMenuButtonCollapse
+            )}
+          >
+            {isSidebarOpened ? (
+              <ArrowBackIcon
+                classes={{
+                  root: classNames(
+                    classes.headerIcon,
+                    classes.headerIconCollapse
+                  )
+                }}
+              />
+            ) : (
+              <MenuIcon
+                classes={{
+                  root: classNames(
+                    classes.headerIcon,
+                    classes.headerIconCollapse
+                  )
+                }}
+              />
+            )}
+          </IconButton>
+        ) : null}
+
         <Typography variant="h6" weight="medium" className={classes.logotype}>
           Admin Panel
         </Typography>
@@ -113,9 +126,9 @@ export default function Header(props) {
           color="inherit"
           className={classes.headerMenuButton}
           aria-controls="profile-menu"
-          onClick={e => setProfileMenu(e.currentTarget)}
+          onClick={() => signOut(userDispatch, props.history)}
         >
-          <AccountIcon classes={{ root: classes.headerIcon }} />
+          <ExitIcon classes={{ root: classes.headerIcon }} />
         </IconButton>
         <Menu
           id="mail-menu"
@@ -164,7 +177,7 @@ export default function Header(props) {
             </Typography>
           </div>
         </Menu>
-        <Menu
+        {/* <Menu
           id="profile-menu"
           open={Boolean(profileMenu)}
           anchorEl={profileMenu}
@@ -184,18 +197,18 @@ export default function Header(props) {
               classes.headerMenuItem
             )}
           >
-            <AccountIcon className={classes.profileMenuIcon} /> Profile
+            <ExitIcon className={classes.profileMenuIcon} /> Profile
           </MenuItem>
           <div className={classes.profileMenuUser}>
             <Typography
               className={classes.profileMenuLink}
               color="primary"
-              onClick={() => signOut(userDispatch, props.history)}
+              }
             >
               Sign Out
             </Typography>
           </div>
-        </Menu>
+        </Menu> */}
       </Toolbar>
     </AppBar>
   );

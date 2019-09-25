@@ -29,16 +29,16 @@ const structure = [
   {
     id: 1,
     label: "Manage Users",
-    link: "/app/users",
+    link: "/admin",
     icon: <UsersIcon />
   },
   { id: 2, type: "divider" },
-  { id: 3, label: "Reports", link: "/app/report", icon: <ReportIcon /> },
+  { id: 3, label: "Reports", link: "/admin/report", icon: <ReportIcon /> },
   { id: 4, type: "divider" },
   {
     id: 5,
     label: "Notifications",
-    link: "/app/notification",
+    link: "/admin/notification",
     icon: <NotificationsIcon />
   }
 ];

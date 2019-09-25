@@ -1,7 +1,12 @@
-import React from "react";
+import React, {
+  createContext,
+  useReducer,
+  useContext
+  // useEffect
+} from "react";
 
-var LayoutStateContext = React.createContext();
-var LayoutDispatchContext = React.createContext();
+var LayoutStateContext = createContext();
+var LayoutDispatchContext = createContext();
 
 function layoutReducer(state, action) {
   switch (action.type) {
@@ -14,10 +19,19 @@ function layoutReducer(state, action) {
 }
 
 function LayoutProvider({ children }) {
-  var [state, dispatch] = React.useReducer(layoutReducer, {
-    //hesa
+  const [state, dispatch] = useReducer(layoutReducer, {
     isSidebarOpened: false
   });
+
+  // useEffect(() => {
+  //   onProfileLoad();
+  // }, []);
+
+  // const onProfileLoad = async () => {
+  //   const user = await getUser();
+  //   dispatch({ type: "SET_ROLE", role: !user ? null : user.role });
+  // };
+
   return (
     <LayoutStateContext.Provider value={state}>
       <LayoutDispatchContext.Provider value={dispatch}>
@@ -28,7 +42,7 @@ function LayoutProvider({ children }) {
 }
 
 function useLayoutState() {
-  var context = React.useContext(LayoutStateContext);
+  var context = useContext(LayoutStateContext);
   if (context === undefined) {
     throw new Error("useLayoutState must be used within a LayoutProvider");
   }
@@ -36,7 +50,7 @@ function useLayoutState() {
 }
 
 function useLayoutDispatch() {
-  var context = React.useContext(LayoutDispatchContext);
+  var context = useContext(LayoutDispatchContext);
   if (context === undefined) {
     throw new Error("useLayoutDispatch must be used within a LayoutProvider");
   }

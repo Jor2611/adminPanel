@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { pool } = require("../config/db");
+const { getProfile } = require("../config/middlewares");
 
 router.post("/", async (req, res) => {
   const { username, password } = req.body;
@@ -32,7 +33,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/logout", async (req, res) => {
+router.get("/getUser", getProfile, async (req, res) => {
+  console.log(req.user);
+  res.json({ user: req.user });
+});
+
+router.get("/logout", async (req, res) => {
   const token = req.header("Authorization").replace("Bearer ", "");
   try {
     await pool.query("DELETE FROM tokens WHERE token=$1", [token]);
