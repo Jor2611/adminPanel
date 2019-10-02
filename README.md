@@ -1,4 +1,4 @@
-# Custom Admin Panel
+# Custom Admin Panel (Unfinished yet)
 
 Custom Admin Panel for managing users and reports.
 Technologies: React.js with Hooks, Node/Express.js, PostgreSQL.
